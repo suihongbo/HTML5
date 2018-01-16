@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画板</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: #000;
+        }
+        #cvs{
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+<canvas id="cvs" width="1200" height="800">
+
+</canvas>
+<script>
+    var oCvs = document.querySelector('#cvs');
+    var cvs = oCvs.getContext('2d');
+    /*cvs.fillStyle='#FF0000';
+    cvs.fillRect(0,0,80,100);*/
+    cvs.moveTo(100,100);
+    cvs.lineTo(1000,100);
+    cvs.lineTo(1000,600);
+    cvs.lineTo(100,600);
+    cvs.strokeStyle = 'pink';
+    cvs.lineWidth = 50 ;
+    cvs.closePath();
+    cvs.stroke();
+
+
+    oCvs.onmousedown = function (e) {
+        var iLeft = e.clientX;
+        var iTop = e.clientY;
+        cvs.moveTo(iLeft,iTop);
+        oCvs.onmousemove = function(e){
+            var disX = e.clientX;
+            var disY = e.clientY;
+            cvs.lineTo(disX,disY);
+            cvs.strokeStyle = 'pink';
+            cvs.lineWidth = 50 ;
+            cvs.stroke();
+            oCvs.onmouseup = function () {
+                oCvs.onmousemove = null;
+            }
+        }
+    }
+
+
+</script>
+
+
+</body>
+</html>
