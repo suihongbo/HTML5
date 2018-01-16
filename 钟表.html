@@ -11,52 +11,18 @@
         body{
             position: relative;
         }
-        #hour{
-            width: 12px;
-            height: 80px;
-            background: #000000;
-            position: absolute;
-            left: 700px;
-            top: 300px;
-            -webkit-transform-origin: 7px -2px;
-        }
-        #minute{
-            width: 7px;
-            height: 100px;
-            background: green;
-            position: absolute;
-            left: 700px;
-            top: 300px;
-            -webkit-transform-origin: 2px 0px;
-        }
-        #second{
-            width: 4px;
-            height: 130px;
-            background: red;
-            position: absolute;
-            left: 700px;
-            top: 300px;
-            -webkit-transform-origin: 2px -2px;
-        }
     </style>
 </head>
 <body>
-<canvas id="cvs" width="1400" height="800">
-</canvas>
-<div id="hour"></div>
-<div id="minute"></div>
-<div id="second"></div>
+<canvas id="cvs" width="1400" height="800"></canvas>
+
 <script>
     var oCvs = document.querySelector('#cvs');
     var cvs = oCvs.getContext('2d');
-    var oHour = document.getElementById('hour');
-    var oMinute = document.getElementById('minute');
-    var oSecond = document.getElementById('second');
 
-    cvs.arc(700,300,200,0,Math.PI*2);
     for(var i=0; i<60; i++){
         cvs.moveTo(700,300);
-        cvs.arc(700,300,200,Math.PI/30*i,0);
+        cvs.arc(700,300,200,Math.PI/30*i,Math.PI/30*(i+1));
     }
     cvs.strokeStyle = '#000';
     cvs.lineWidth = 2 ;
@@ -70,10 +36,9 @@
     cvs.stroke();
 
     cvs.beginPath();
-    cvs.arc(700,300,200,0,Math.PI*2);
-    for(var i=0; i<60; i++){
+    for(var i=0; i<12; i++){
         cvs.moveTo(700,300);
-        cvs.arc(700,300,200,Math.PI/6*i,0);
+        cvs.arc(700,300,200,Math.PI/6*i,Math.PI/6*i);
     }
     cvs.strokeStyle = '#000';
     cvs.lineWidth = 4 ;
@@ -86,41 +51,42 @@
     cvs.fill();
     cvs.stroke();
 
-    /*cvs.beginPath();
-    cvs.moveTo(700,300);
-    cvs.lineTo(700,380);
-    cvs.strokeStyle = '#0f0';
-    cvs.lineWidth = 8 ;
-    cvs.stroke();
-
-    cvs.beginPath();
-    cvs.moveTo(700,300);
-    cvs.lineTo(750,300);
-    cvs.strokeStyle = '#000';
-    cvs.lineWidth = 12 ;
-    cvs.stroke();
-
-    cvs.beginPath();
-    cvs.moveTo(700,300);
-    cvs.lineTo(600,200);
-    cvs.strokeStyle = '#f00';
-    cvs.lineWidth = 5 ;
-    cvs.stroke();*/
-
-    function run(){
-        var date = new Date();
-        var hour = date.getHours();
-        var minute = date.getMinutes();
-        var second = date.getSeconds();
-        oHour.style.webkitTransform = 'rotate('+(hour+minute/60)*30+'deg)';
-        oMinute.style.webkitTransform = 'rotate('+(minute+second/60)*6+'deg)';
-        oSecond.style.webkitTransform = 'rotate('+second*6+'deg)';
-    }
     run();
-    setInterval(function(){
-        run();
-    },1000);
 
+    function run() {
+        //清除上一个时间图
+        cvs.clearRect(550,180,280,240);
+        //取时间
+        var oDate = new Date();
+        var iSeconds = oDate.getSeconds();
+        var iMinutes = oDate.getMinutes() + iSeconds/60;
+        var iHours = oDate.getHours() + iMinutes/60;
+
+        //秒针
+        cvs.beginPath();
+        cvs.moveTo(700,300);
+        cvs.arc(700,300,120,(iSeconds*6-90)*Math.PI/180,(iSeconds*6-90)*Math.PI/180);
+        cvs.strokeStyle = '#f00';
+        cvs.lineWidth = 4 ;
+        cvs.stroke();
+        //分针
+        cvs.beginPath();
+        cvs.moveTo(700,300);
+        cvs.arc(700,300,90,(iMinutes*6-90)*Math.PI/180,(iMinutes*6-90)*Math.PI/180);
+        cvs.strokeStyle = '#0f0';
+        cvs.lineWidth = 7 ;
+        cvs.stroke();
+        //时针
+        cvs.beginPath();
+        cvs.moveTo(700,300);
+        cvs.arc(700,300,70,(iHours*30-90)*Math.PI/180,(iHours*30-90)*Math.PI/180);
+        cvs.strokeStyle = '#000';
+        cvs.lineWidth = 10 ;
+        cvs.stroke();
+    }
+    setInterval(function () {
+            run();
+    },1000);
 
 
 </script>
